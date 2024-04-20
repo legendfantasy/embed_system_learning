@@ -1,0 +1,39 @@
+#CROSS_COMPILE=
+CROSS_COMPILE=arm-linux-
+CC=$(CROSS_COMPILE)gcc
+AR=$(CROSS_COMPILE)ar  
+RANLIB=$(CROSS_COMPILE)ranlib
+CFLAGS=-g -Wall
+LIBS=-L./ -lcgic
+
+all: libcgic.a cgictest.cgi capture mycgitest.cgi cgi_led.cgi
+
+install: libcgic.a
+	cp libcgic.a /usr/local/lib
+	cp cgic.h /usr/local/include
+	@echo libcgic.a is in /usr/local/lib. cgic.h is in /usr/local/include.
+
+libcgic.a: cgic.o cgic.h
+	rm -f libcgic.a
+	$(AR) rc libcgic.a cgic.o
+	$(RANLIB) libcgic.a
+
+#mingw32 and cygwin users: replace .cgi with .exe
+
+cgictest.cgi: cgictest.o libcgic.a
+#gcc cgictest.o -o cgictest.cgi ${LIBS}
+	$(CC) $(CFLAGS) cgictest.o -o cgictest.cgi $(LIBS)
+
+mycgitest.cgi: mycgitest.o libcgic.a
+	$(CC) $(CFLAGS) mycgitest.o -o mycgitest.cgi $(LIBS)
+cgi_led.cgi: cgi_led.o libcgic.a
+	$(CC) $(CFLAGS) cgi_led.o -o cgi_led.cgi $(LIBS)
+capture: capture.o libcgic.a
+#gcc capture.o -o capture ${LIBS}
+	$(CC) $(CFLAGS) capture.o -o capture ${LIBS}
+
+clean:
+	rm -f *.o *.a *.cgi capture
+
+move:
+	cp *.cgi /opt/4412/rootfs/boa/cgi-bin

@@ -1,0 +1,33 @@
+MODULE_NAME = mychar_poll
+APP_NAME = testmychar_select
+CROSS_COMPILE = arm-none-linux-gnueabi-
+CC = $(CROSS_COMPILE)gcc
+
+ifeq ($(KERNELRELEASE),)  
+
+ifeq ($(ARCH),arm)  
+KERNELDIR ?= /home/legendfantasy/fs4412/linux-3.14  
+ROOTFS ?= /opt/4412/rootfs  
+else
+KERNELDIR ?= /lib/modules/$(shell uname -r)/build
+endif  
+
+PWD := $(shell pwd)  
+
+
+modules:  
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules 
+	$(CC) $(APP_NAME).c -o $(APP_NAME)
+install:
+	cp -raf  $(MODULE_NAME).ko /opt/4412/rootfs/drv_module/
+	cp -raf  $(APP_NAME) /opt/4412/rootfs/drv_module/
+clean:
+	rm -rf  *.o  *.ko  .*.cmd  *.mod.*  modules.order  Module.symvers   .tmp_versions 
+	rm -rf $(APP_NAME)
+
+else
+CONFIG_MODULE_SIG=n
+
+obj-m += $(MODULE_NAME).o
+
+endif
