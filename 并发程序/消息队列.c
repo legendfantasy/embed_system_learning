@@ -34,6 +34,7 @@ int main()
         int mtype;
         char mtext[10];
     }msg_mbuf;
+    
     struct msqid_ds msg_info;
     
     char *msgpath = "/ipc/msg";

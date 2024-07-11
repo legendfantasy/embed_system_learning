@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../fs4412/linux-3.14"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../fs4412/led_dt"
+		},
+		{
+			"path": "../fs4412/drivers"
+		}
+	],
+	"settings": {}
+}
